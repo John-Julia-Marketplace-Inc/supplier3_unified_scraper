@@ -182,7 +182,8 @@ def translate_to_english(driver):
         WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, "//span[text()='Translate']"))).click()
         print("Clicked on 'Translate' button.")
     except Exception as e:
-        print("Translate button not found or already translated:", e)
+        continue
+        print("Translate button not found or already translated:")
         
     # Wait for the page to update after clicking translate
     time.sleep(5)  # Extend this delay if translation takes longer
