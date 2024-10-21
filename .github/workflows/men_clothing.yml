@@ -1,4 +1,4 @@
-name: Trigger Public Workflow
+name: Trigger Men Shoes Pipeline
 
 on:
   workflow_dispatch:  
