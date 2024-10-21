@@ -388,17 +388,17 @@ if __name__ == "__main__":
           """)
     
     # Execute the scraper with concurrent threads
-    # with ThreadPoolExecutor(max_workers=max_workers) as executor:
-    #     futures = [executor.submit(parser, url, page) for url, page in zip(urls, pages)]
-    #     for future in as_completed(futures):
-    #         try:
-    #             future.result()
-    #         except Exception as e:
-    #             print(f"Exception occurred: {e}")
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = [executor.submit(parser, url, page) for url, page in zip(urls, pages)]
+        for future in as_completed(futures):
+            try:
+                future.result()
+            except Exception as e:
+                print(f"Exception occurred: {e}")
 
-    # end_time = time.time()  
-    # execution_time = end_time - start_time
+    end_time = time.time()  
+    execution_time = end_time - start_time
 
-    # print(f"Start time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(start_time))}")
-    # print(f"End time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(end_time))}")
-    # print(f"Total execution time: {execution_time:.2f} seconds")
+    print(f"Start time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(start_time))}")
+    print(f"End time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(end_time))}")
+    print(f"Total execution time: {execution_time:.2f} seconds")
