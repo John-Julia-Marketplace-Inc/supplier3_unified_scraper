@@ -113,8 +113,6 @@ def extract_product_details(product, driver, idx):
             product_title = driver.find_element(By.XPATH, '//*[@id="bloccoh1"]/p/font/font').text
         except:
             product_title = driver.find_element(By.CSS_SELECTOR, '#bloccoh1 > p > font > font')
-            
-        print('PRODUCT TITLE:', product_title)
 
         # Close the product detail tab and switch back to the main tab
         driver.close()
@@ -144,7 +142,7 @@ def extract_product_details(product, driver, idx):
             df.to_csv(filename, header=not os.path.exists(filename), index=False, mode='a')
         
     except Exception as e:
-        print(f"Error extracting product details: {e}")
+        print(f"Error extracting product details")
     finally:
         if len(driver.window_handles) > 1:
             driver.close()
@@ -293,7 +291,6 @@ def parser(url, pages, max_login_attempts=3):
                 if start and counter:
                     idx = url.index('page')
                     url = url[:idx] + f'page={counter}'
-                    print('URL:', url)
                     driver.get(url)
                     time.sleep(2)
                 else:
