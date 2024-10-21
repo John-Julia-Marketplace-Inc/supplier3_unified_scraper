@@ -260,7 +260,8 @@ def parser(url, pages, max_login_attempts=3):
         start, end, counter = None, None, None
         
         if pages == 'all':
-            url = url
+            url = f'{url}?page=1'
+            start = counter = 1
         elif ',' in pages:
             start, end = pages.split(',')
             start, end = int(start), int(end)
@@ -278,7 +279,7 @@ def parser(url, pages, max_login_attempts=3):
                 catalog = driver.find_element(By.ID, "catalogogen")
                 product_containers = catalog.find_elements(By.CLASS_NAME, "contfoto")
                 
-                if counter:
+                if counter and end:
                     if counter > end:
                         break
                 
@@ -286,7 +287,7 @@ def parser(url, pages, max_login_attempts=3):
                 for idx, product in enumerate(product_containers, 1):
                     extract_product_details(product, driver, idx)
                 
-                if start and end:
+                if start and counter:
                     counter += 1
                 
                 if start and counter:
@@ -318,16 +319,19 @@ def setup():
         folder = 'women_shoes'
     elif 'men_shoes' in filename or 'man_shoes' in filename:
         folder = 'men_shoes'
-    elif 'women_clothing' in filename:
+    elif 'women_clothing' in filename or 'women_clothes' in filename:
         folder = 'women_clothing'
-    elif 'men_clothing' in filename:
+    elif 'men_clothing' in filename or 'men_clothes' in filename:
         folder = 'men_clothing'
     elif 'belts' in filename:
         folder = 'belts'
+    elif 'sunglasses' in filename:
+        folder = 'sunglasses'
     elif 'bags':
         folder = 'bags'
     
-    else: return False
+    else: 
+        raise KeyError(f'Could not find the category: {filename}')
     
     folder = f'private_repo/clean_data/{folder}'
     
@@ -384,17 +388,17 @@ if __name__ == "__main__":
           """)
     
     # Execute the scraper with concurrent threads
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        futures = [executor.submit(parser, url, page) for url, page in zip(urls, pages)]
-        for future in as_completed(futures):
-            try:
-                future.result()
-            except Exception as e:
-                print(f"Exception occurred: {e}")
+    # with ThreadPoolExecutor(max_workers=max_workers) as executor:
+    #     futures = [executor.submit(parser, url, page) for url, page in zip(urls, pages)]
+    #     for future in as_completed(futures):
+    #         try:
+    #             future.result()
+    #         except Exception as e:
+    #             print(f"Exception occurred: {e}")
 
-    end_time = time.time()  
-    execution_time = end_time - start_time
+    # end_time = time.time()  
+    # execution_time = end_time - start_time
 
-    print(f"Start time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(start_time))}")
-    print(f"End time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(end_time))}")
-    print(f"Total execution time: {execution_time:.2f} seconds")
+    # print(f"Start time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(start_time))}")
+    # print(f"End time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(end_time))}")
+    # print(f"Total execution time: {execution_time:.2f} seconds")
