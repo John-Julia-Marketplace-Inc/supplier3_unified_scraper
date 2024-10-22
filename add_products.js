@@ -178,9 +178,9 @@ async function main(to_add, non_existent) {
 
     console.log('Number of products to add:', filteredProducts.length)
     
-    // for (const product of filteredProducts) {
-    //     await add_products(product)
-    // }
+    for (const product of filteredProducts) {
+        await add_products(product)
+    }
 }
 
 const all_data = process.env.ALL_DATA_FILE;
