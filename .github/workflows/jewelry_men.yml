@@ -2,7 +2,21 @@ name: Trigger Men Jewelry Pipeline
 
 on:
   workflow_dispatch:  
+    inputs:
+        infile:
+            description: 'The input CSV file path'
+            required: true
+            default: 'private_repo/clean_data/jewelry/clean_jewelry.csv'
+        outfile:
+            description: 'Where to store non-existent products'
+            required: true
+            default: 'private_repo/clean_data/jewelry/skus_to_add.csv'
+        all_data_file:
+            description: 'All cleaned dataset'
+            required: true
+            default: 'private_repo/clean_data/jewelry/clean_jewelry.csv'
 
+        
 #   schedule:
     # - cron: '0 */3 * * *'  
 
@@ -53,17 +67,36 @@ jobs:
       - name: Clean Data
         run: |
             python /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/private_repo/clean_jewelry.py --input_file "jewelry_men.csv"
+
+      - name: Install Node.js dependencies 
+        run: npm install axios csv-parser dotenv shopify-api-node fs
+    
+      - name: Check existing SKUs
+        run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/check_existing_skus.js
+        env:
+          SHOP: ${{ secrets.SHOP }}
+          SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
+          INFILE: ${{ github.event.inputs.infile }}
+          OUTFILE: ${{ github.event.inputs.outfile }}
+
+      - name: Add new products
+        run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/add_products.js
+        env:
+            SHOP: ${{ secrets.SHOP }}
+            SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
+            ALL_DATA_FILE: ${{ github.event.inputs.infile }}
+            OUTFILE: ${{ github.event.inputs.outfile }}
             
 
       - name: Commit changes from update.py
         run: |
-          cd private_repo
-          git config --local user.name "GitHub Action"
-          git config --local user.email "action@github.com"
-          git pull origin master --no-edit
-          git add .
-          git commit -m "Commit changes from update.py"
-          git push
+            cd private_repo
+            git config --local user.name "GitHub Action"
+            git config --local user.email "action@github.com"
+            git pull origin master --no-edit
+            git add .
+            git commit -m "Commit changes from update.py"
+            git push
       
     #   - name: Trigger Public Repo Workflow
     #     run: |
