@@ -18,8 +18,8 @@ on:
         zero_inventory:
             description: 'Zero Inventory dataset'
             default: 'private_repo/clean_data/jewelry/zero_inventory.csv'
-  schedule:
-    - cron: '0 */3 * * *'  
+#   schedule:
+#     - cron: '0 */3 * * *'  
 
 jobs:
   trigger-public-workflow:

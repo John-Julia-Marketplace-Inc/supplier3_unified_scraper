@@ -75,30 +75,30 @@ jobs:
         env:
             SHOP: ${{ secrets.SHOP }}
             SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
-            INFILE: ${{ github.event.inputs.infile }}
-            OUTFILE: ${{ github.event.inputs.outfile }}
+            INFILE: 'private_repo/clean_data/women_clothing/to_create.csv'
+            OUTFILE: 'private_repo/clean_data/women_clothing/skus_to_add.csv'
 
       - name: Add new products
         run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/add_products.js
         env:
             SHOP: ${{ secrets.SHOP }}
             SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
-            ALL_DATA_FILE: ${{ github.event.inputs.infile }}
-            OUTFILE: ${{ github.event.inputs.outfile }}
+            ALL_DATA_FILE: 'private_repo/clean_data/women_clothing/to_create.csv'
+            OUTFILE: 'private_repo/clean_data/women_clothing/skus_to_add.csv'
 
       - name: Update products
         run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/update_products.js
         env:
             SHOP: ${{ secrets.SHOP }}
             SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
-            TO_UPDATE: ${{ github.event.inputs.to_update }}
+            TO_UPDATE: 'private_repo/clean_data/women_clothing/to_update.csv'
 
       - name: Update products
         run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/set_zero_inventory.js
         env:
             SHOP: ${{ secrets.SHOP }}
             SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
-            ZERO_INVENTORY: ${{ github.event.inputs.zero_inventory }}
+            ZERO_INVENTORY: 'private_repo/clean_data/women_clothing/zero_inventory.csv'
 
       - name: Commit changes from update.py
         run: |
