@@ -61,12 +61,12 @@ jobs:
                         --filename "women_clothing_part3.csv" \
                         --pages "91,100" "101,110" "111,120" "121,130" "131,140" "141,150" "151,160" \
                         --urls "${{ secrets.WOMEN_CLOTHES }}" \
-                        --n_collections=7 --max_workers=5
+                        --n_collections=7 --max_workers=6
 
       - name: Clean Data
         run: |
             python /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/private_repo/clean_women_clothing.py --input_file "women_clothing_part3.csv"
-            
+
       - name: Install Node.js dependencies 
         run: npm install axios csv-parser dotenv shopify-api-node fs
         
