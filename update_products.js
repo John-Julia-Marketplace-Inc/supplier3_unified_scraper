@@ -27,6 +27,7 @@ const handleRateLimit = async (error) => {
 // Fetch CSV products from file
 async function fetch_csv_products() {
     const products = [];
+    console.log('Update file:', process.env.TO_UPDATE)
     try {
         await pipeline(
             fs.createReadStream(process.env.TO_UPDATE),

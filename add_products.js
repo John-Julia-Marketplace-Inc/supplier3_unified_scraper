@@ -186,4 +186,7 @@ async function main(to_add, non_existent) {
 const all_data = process.env.ALL_DATA_FILE;
 const skus_to_add = process.env.OUTFILE;
 
+console.log('All data file:', all_data);
+console.log('Skus to add:', skus_to_add)
+
 main(all_data, skus_to_add);

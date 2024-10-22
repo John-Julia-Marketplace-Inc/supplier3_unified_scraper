@@ -136,4 +136,5 @@ async function main(products) {
 }
 
 // Run the script
+console.log('Zero inventory path:', process.env.ZERO_INVENTORY)
 main(process.env.ZERO_INVENTORY);

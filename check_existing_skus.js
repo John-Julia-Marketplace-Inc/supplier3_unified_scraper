@@ -10,6 +10,9 @@ const pipeline = promisify(stream.pipeline);
 const OUTFILE = process.env.OUTFILE;
 const INFILE  = process.env.INFILE;
 
+console.log('INFILE:', INFILE);
+console.log('OUTFILE:', OUTFILE);
+
 const shopify = new Shopify({
     shopName: process.env.SHOP,
     accessToken: process.env.SHOPIFY_ACCESS_TOKEN,
