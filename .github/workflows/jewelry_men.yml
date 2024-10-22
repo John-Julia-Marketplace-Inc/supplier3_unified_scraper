@@ -95,7 +95,7 @@ jobs:
             SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
             TO_UPDATE: 'private_repo/clean_data/jewelry/clean_jewelry.csv'
 
-      - name: Update products
+      - name: Set Inventory Zero
         run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/set_zero_inventory.js
         env:
             SHOP: ${{ secrets.SHOP }}
