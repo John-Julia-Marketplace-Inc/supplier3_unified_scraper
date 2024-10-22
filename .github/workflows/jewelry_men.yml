@@ -5,18 +5,16 @@ on:
     inputs:
         infile:
             description: 'The input CSV file path'
-            required: true
             default: 'private_repo/clean_data/jewelry/clean_jewelry.csv'
         outfile:
             description: 'Where to store non-existent products'
-            required: true
             default: 'private_repo/clean_data/jewelry/skus_to_add.csv'
         all_data_file:
             description: 'All cleaned dataset'
-            required: true
             default: 'private_repo/clean_data/jewelry/clean_jewelry.csv'
-
-        
+        to_update:
+            description: 'Products to update'
+            default: 'private_repo/clean_data/jewelry/clean_jewelry.csv'
   schedule:
     - cron: '0 */3 * * *'  
 
@@ -86,7 +84,13 @@ jobs:
             SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
             ALL_DATA_FILE: ${{ github.event.inputs.infile }}
             OUTFILE: ${{ github.event.inputs.outfile }}
-            
+    
+      - name: Update products
+        run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/update_products.js
+        env:
+            SHOP: ${{ secrets.SHOP }}
+            SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
+            TO_UPDATE: ${{ github.event.inputs.to_update }}
 
       - name: Commit changes from update.py
         run: |
