@@ -17,8 +17,8 @@ on:
             default: 'private_repo/clean_data/jewelry/clean_jewelry.csv'
 
         
-#   schedule:
-    # - cron: '0 */3 * * *'  
+  schedule:
+    - cron: '0 */3 * * *'  
 
 jobs:
   trigger-public-workflow:
