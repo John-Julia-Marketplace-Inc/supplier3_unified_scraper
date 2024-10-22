@@ -49,6 +49,10 @@ jobs:
                         --pages "1,5" \
                         --urls "${{ secrets.JEWELRY_MEN }}" \
                         --n_collections=1 --max_workers=1
+
+      - name: Clean Data
+        run: |
+            python /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/private_repo/clean_jewelry.py --input_file "jewelry_men.csv"
             
 
       - name: Commit changes from update.py

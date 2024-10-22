@@ -46,7 +46,7 @@ jobs:
             export PASSWORD="${{ secrets.PASSWORD }}"
             python /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/get_data.py \
                         --filename "women_clothing_part2.csv" \
-                        --pages "60,70" "71,80" "81,90" "91,100" \
+                        --pages "48,59" "60,70" "71,80" "81,90" \
                         --urls "${{ secrets.WOMEN_CLOTHES }}" \
                         --n_collections=4 --max_workers=4
             

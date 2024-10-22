@@ -46,9 +46,9 @@ jobs:
             export PASSWORD="${{ secrets.PASSWORD }}"
             python /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/get_data.py \
                         --filename "women_clothing_part1.csv" \
-                        --pages "1,11" "12,23" "24,35" "36,47" "48,59" \
+                        --pages "1,11" "12,23" "24,35" "36,47"\
                         --urls "${{ secrets.WOMEN_CLOTHES }}" \
-                        --n_collections=5 --max_workers=5
+                        --n_collections=4 --max_workers=4
             
 
       - name: Commit changes from update.py

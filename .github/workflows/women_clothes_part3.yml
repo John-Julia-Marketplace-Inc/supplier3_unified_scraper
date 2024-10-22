@@ -46,10 +46,14 @@ jobs:
             export PASSWORD="${{ secrets.PASSWORD }}"
             python /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/get_data.py \
                         --filename "women_clothing_part3.csv" \
-                        --pages "101,110" "111,120" "121,130" "131,140" "141,150" "151,160" \
+                        --pages "91,100" "101,110" "111,120" "121,130" "131,140" "141,150" "151,160" \
                         --urls "${{ secrets.WOMEN_CLOTHES }}" \
-                        --n_collections=6 --max_workers=6
-            
+                        --n_collections=7 --max_workers=7
+
+      - name: Clean Data
+        run: |
+            python /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/private_repo/clean_women_clothing.py
+
 
       - name: Commit changes from update.py
         run: |
