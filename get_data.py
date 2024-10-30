@@ -1,4 +1,5 @@
 
+import selenium
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -10,6 +11,9 @@ import pandas as pd
 import os
 import threading
 import argparse
+from dotenv import load_dotenv
+
+load_dotenv()
 
 SUPPLIER_URL = os.getenv('SUPPLIER_URL')
 LOGIN = os.getenv('LOGIN')
@@ -333,7 +337,7 @@ def setup():
     else: 
         raise KeyError(f'Could not find the category: {filename}')
     
-    folder = f'private_repo/clean_data/{folder}'
+    folder = f'clean_data/{folder}'
     
     if not os.path.exists(folder):
         os.mkdir(folder)
