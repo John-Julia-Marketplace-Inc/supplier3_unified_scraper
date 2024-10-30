@@ -1,7 +1,7 @@
 const fs = require('fs');
 const csv = require('csv-parser');
 const Shopify = require('shopify-api-node');
-// require('dotenv').config();
+require('dotenv').config();
 const stream = require('stream');
 const { promisify } = require('util');
 
@@ -40,8 +40,8 @@ function create_variants(product) {
     const variants = sizes.map((size, index) => ({
         option1: size,
         price: product["Retail Price"],
-        compare_at_price: product["Compare To Price"],
-        sku: `${product["Supplier Sku"]}`,
+        compare_at_price: product["Compare At Price"],
+        sku: `${product["Supplier SKU"]}`,
         requires_shipping: true,
         inventory_quantity: parseInt(qtyDetails[index], 10) || 0,
         inventory_management: "shopify",
@@ -62,7 +62,7 @@ const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const handleRateLimit = async (error) => {
     if (error.extensions && error.extensions.code === 'THROTTLED') {
-        const retryAfter = parseInt(error.extensions.retryAfter) || 2000; // Default wait time of 2 seconds if no retryAfter is provided
+        const retryAfter = parseInt(error.extensions.retryAfter) || 4000; // Default wait time of 2 seconds if no retryAfter is provided
         console.log(`Rate limited! Waiting for ${retryAfter} ms before retrying...`);
         await wait(retryAfter); // Wait for the time suggested by Shopify (or 2 seconds)
     } else {
@@ -70,6 +70,13 @@ const handleRateLimit = async (error) => {
     }
 };
 
+function toTitleCase(str) {
+    return str
+        .toLowerCase()
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
 
 async function add_products(product) {
     
@@ -79,7 +86,6 @@ async function add_products(product) {
         }
 
         if (product['Inventory'] == 'OUT OF STOCK') {
-            console.log('Skipping out of stock product:', product['SKU'])
             return
         }
 
@@ -102,7 +108,7 @@ async function add_products(product) {
             position: index + 1
         })).filter(image => image.src);
 
-        // Product Title,Vendor,SKU,Supplier Sku,Original Price,Retail Price,Compare To Price,Unit Cost,Year,
+        // Product Title,Vendor,SKU,Supplier Sku,Original Price,Retail Price,Compare At Price,Unit Cost,Year,
         // Season,Size,Qty,Inventory,Product Category,Tags,Color detail,Color Supplier,Material,Country,Sizing Standard,Fit,Description
 
         const metafields = [
@@ -114,7 +120,10 @@ async function add_products(product) {
             { namespace: 'custom', key: 'year', value: product['Year'], type: 'single_line_text_field' },
             { namespace: 'custom', key: 'supplier_sku', value: product['SKU'], type: 'single_line_text_field' },
             { namespace: 'custom', key: 'size_info', value: product['Sizing Standard'], type: 'single_line_text_field'},
-            { namespace: 'custom', key: 'fit', value: product['Fit'], type: 'single_line_text_field'}
+            { namespace: 'custom', key: 'fit', value: product['Fit'], type: 'single_line_text_field'},
+            { namespace: 'custom', key: 'gender', value: toTitleCase(product['gender']), type: 'single_line_text_field' },
+            { namespace: 'department', key: 'product', value: product['Department'], type: 'single_line_text_field' },
+        
         ];
 
         const filteredMetafields = metafields.filter(metafield => metafield.value && metafield.value !== '0' && metafield.value !== 0 && metafield.value !== '-' );
@@ -143,7 +152,7 @@ async function add_products(product) {
                     },
                     compare_at_price: {
                         currency_code: 'USD',
-                        amount: product['Compare to Price']
+                        amount: product['Compare At Price']
                     }
                 }]
             },
@@ -153,13 +162,12 @@ async function add_products(product) {
 
         try {
             const response = await shopify.product.create(new_product);
-            console.log(`Product created successfully! ${response.title}`);
         } catch (error) {
             if (error.extensions && error.extensions.code === 'THROTTLED') {
                 await handleRateLimit(error);
                 return add_products(product)
             } else {
-                console.error(`Error updating SKU ${sku}:`, error);
+                console.error(`Error updating SKU`);
             }
         }
         console.log('\n=========\n');
@@ -179,6 +187,7 @@ async function main(to_add, non_existent) {
     console.log('Number of products to add:', filteredProducts.length)
     
     for (const product of filteredProducts) {
+        // console.log(product)
         await add_products(product)
     }
 }
