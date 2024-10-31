@@ -4,6 +4,7 @@ const Shopify = require('shopify-api-node');
 const stream = require('stream');
 const { promisify } = require('util');
 const fs = require('fs');
+// require('dotenv').config();
 
 const pipeline = promisify(stream.pipeline);
 

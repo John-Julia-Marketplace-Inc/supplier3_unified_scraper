@@ -1,7 +1,7 @@
 const fs = require('fs');
 const csv = require('csv-parser');
 const Shopify = require('shopify-api-node');
-require('dotenv').config();
+// require('dotenv').config();
 const stream = require('stream');
 const { promisify } = require('util');
 
@@ -108,8 +108,9 @@ async function add_products(product) {
             position: index + 1
         })).filter(image => image.src);
 
-        // Product Title,Vendor,SKU,Supplier Sku,Original Price,Retail Price,Compare At Price,Unit Cost,Year,
-        // Season,Size,Qty,Inventory,Product Category,Tags,Color detail,Color Supplier,Material,Country,Sizing Standard,Fit,Description
+        // Product Title,Vendor,SKU,Supplier SKU,Unit Cost,Retail Price,Compare At Price,Material,gender,department,Color detail,
+        // Color Supplier,Country,Tags,Product Category,Year,Season,Size,Qty,Sizing Standard,Description,Clean Images
+// 
 
         const metafields = [
             { namespace: 'category', key: 'details', value: product['Material'], type: 'multi_line_text_field' },

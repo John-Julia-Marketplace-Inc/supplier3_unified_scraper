@@ -3,8 +3,8 @@ name: Trigger Men Sunglasses Pipeline
 on:
   workflow_dispatch:  
 
-#   schedule:
-    # - cron: '0 */3 * * *'  
+  schedule:
+    - cron: '0 */6 * * *'  
 
 jobs:
   trigger-public-workflow:
@@ -49,6 +49,43 @@ jobs:
                         --pages "1,5" \
                         --urls "${{ secrets.MEN_SUNGLASSES }}" \
                         --n_collections=1 --max_workers=1
+
+      - name: Clean Data
+        run: |
+            python /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/private_repo/clean_sunglasses.py --input_file "men_sunglasses.csv"
+
+      - name: Install Node.js dependencies 
+        run: npm install axios csv-parser dotenv shopify-api-node fs
+    
+      - name: Check existing SKUs
+        run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/check_existing_skus.js
+        env:
+          SHOP: ${{ secrets.SHOP }}
+          SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
+          INFILE: 'private_repo/clean_data/sunglasses/clean_sunglasses.csv'
+          OUTFILE: 'private_repo/clean_data/sunglasses/skus_to_add.csv'
+
+      - name: Add new products
+        run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/add_products.js
+        env:
+            SHOP: ${{ secrets.SHOP }}
+            SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
+            ALL_DATA_FILE: 'private_repo/clean_data/sunglasses/clean_sunglasses.csv'
+            OUTFILE: 'private_repo/clean_data/sunglasses/skus_to_add.csv'
+    
+      - name: Update products
+        run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/update_products.js
+        env:
+            SHOP: ${{ secrets.SHOP }}
+            SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
+            TO_UPDATE: 'private_repo/clean_data/sunglasses/clean_sunglasses.csv'
+
+      - name: Set Inventory Zero
+        run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/set_zero_inventory.js
+        env:
+            SHOP: ${{ secrets.SHOP }}
+            SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
+            ZERO_INVENTORY:  'private_repo/clean_data/sunglasses/zero_inventory.csv'
             
 
       - name: Commit changes from update.py
@@ -57,14 +94,7 @@ jobs:
           git config --local user.name "GitHub Action"
           git config --local user.email "action@github.com"
           git pull origin master --no-edit
-          git add .
+          git add clean_data/sunglasses/
           git commit -m "Commit changes from update.py"
           git push
       
-    #   - name: Trigger Public Repo Workflow
-    #     run: |
-    #       curl -X POST \
-    #       -H "Accept: application/vnd.github+json" \
-    #       -H "Authorization: Bearer ${{ secrets.PUBLIC_PAT }}" \
-    #       https://api.github.com/repos/${{ secrets.PUBLIC_REPO_URL }}/dispatches \
-    #       -d '{"event_type": "process_data"}'

@@ -2,24 +2,8 @@ name: Trigger Men Jewelry Pipeline
 
 on:
   workflow_dispatch:  
-    inputs:
-        infile:
-            description: 'The input CSV file path'
-            default: 'private_repo/clean_data/jewelry/clean_jewelry.csv'
-        outfile:
-            description: 'Where to store non-existent products'
-            default: 'private_repo/clean_data/jewelry/skus_to_add.csv'
-        all_data_file:
-            description: 'All cleaned dataset'
-            default: 'private_repo/clean_data/jewelry/clean_jewelry.csv'
-        to_update:
-            description: 'Products to update'
-            default: 'private_repo/clean_data/jewelry/clean_jewelry.csv'
-        zero_inventory:
-            description: 'Zero Inventory dataset'
-            default: 'private_repo/clean_data/jewelry/zero_inventory.csv'
-#   schedule:
-#     - cron: '0 */3 * * *'  
+  schedule:
+    - cron: '0 */5 * * *'  
 
 jobs:
   trigger-public-workflow:
@@ -108,7 +92,7 @@ jobs:
             git config --local user.name "GitHub Action"
             git config --local user.email "action@github.com"
             git pull origin master --no-edit
-            git add .
+            git add clean_data/jewelry/
             git commit -m "Commit changes from update.py"
             git push
       

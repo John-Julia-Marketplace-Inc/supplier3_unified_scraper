@@ -1,2 +1,6 @@
 .env
 __pycache__
+node_modules
+clean_data
+package.json
+package-lock.json
