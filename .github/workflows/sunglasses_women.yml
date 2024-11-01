@@ -58,5 +58,5 @@ jobs:
           git config --local user.email "action@github.com"
           git pull origin master --no-edit
           git add clean_data/sunglasses/
-          git commit -m "Commit changes from update.py"
+          git diff --cached --quiet || git commit -m "Commit changes from actions"
           git push

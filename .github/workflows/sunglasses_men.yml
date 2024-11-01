@@ -88,13 +88,13 @@ jobs:
             ZERO_INVENTORY:  'private_repo/clean_data/sunglasses/zero_inventory.csv'
             
 
-      - name: Commit changes from update.py
+      - name: Commit changes 
         run: |
           cd private_repo
           git config --local user.name "GitHub Action"
           git config --local user.email "action@github.com"
           git pull origin master --no-edit
           git add clean_data/sunglasses/
-          git commit -m "Commit changes from update.py"
+          git diff --cached --quiet || git commit -m "Commit changes from actions"
           git push
       

@@ -65,18 +65,7 @@ jobs:
             SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN_MEN_SHOES }}
             INFILE: 'private_repo/clean_data/men_shoes/to_create.csv'
             OUTFILE: 'private_repo/clean_data/men_shoes/skus_to_add.csv'
-            
-      - name: Commit changes from update.py
-        run: |
-          cd private_repo
-          git config --local user.name "GitHub Action"
-          git config --local user.email "action@github.com"
-          git pull origin master --no-edit
-          git add .
-          git commit -m "Commit changes from update.py"
-          git push
-                      
-
+          
       - name: Add new products
         run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/add_products.js
         env:
@@ -106,6 +95,6 @@ jobs:
             git config --local user.email "action@github.com"
             git pull origin master --no-edit
             git add clean_data/men_shoes/
-            git commit -m "Commit changes from update.py"
+            git diff --cached --quiet || git commit -m "Commit changes from actions"
             git push
                           

@@ -2,22 +2,6 @@ name: Trigger Women Clothes (Part 3) Pipeline
 
 on:
     workflow_dispatch:  
-      inputs:
-          infile:
-              description: 'The input CSV file path'
-              default: 'private_repo/clean_data/women_clothing/to_create.csv'
-          outfile:
-              description: 'Where to store non-existent products'
-              default: 'private_repo/clean_data/women_clothing/skus_to_add.csv'
-          all_data_file:
-              description: 'All cleaned dataset'
-              default: 'private_repo/clean_data/women_clothing/to_create.csv'
-          to_update:
-            description: 'Products to update'
-            default: 'private_repo/clean_data/women_clothing/to_update.csv'
-          zero_inventory:
-            description: 'Zero Inventory dataset'
-            default: 'private_repo/clean_data/women_clothing/zero_inventory.csv'
 
 jobs:
   trigger-public-workflow:
