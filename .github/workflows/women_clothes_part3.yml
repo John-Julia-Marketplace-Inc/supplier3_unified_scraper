@@ -3,6 +3,9 @@ name: Trigger Women Clothes (Part 3) Pipeline
 on:
     workflow_dispatch:  
 
+    schedule:
+    - cron: '0 */4 * * *'  
+
 jobs:
   trigger-public-workflow:
     runs-on: ubuntu-latest
@@ -62,38 +65,38 @@ jobs:
         run: |
             python /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/private_repo/clean_women_clothing.py --input_file "women_clothing_part3.csv"
 
-      # - name: Install Node.js dependencies 
-      #   run: npm install axios csv-parser dotenv shopify-api-node fs
+      - name: Install Node.js dependencies 
+        run: npm install axios csv-parser dotenv shopify-api-node fs
         
-      # - name: Check existing SKUs
-      #   run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/check_existing_skus.js
-      #   env:
-      #       SHOP: ${{ secrets.SHOP }}
-      #       SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
-      #       INFILE: 'private_repo/clean_data/women_clothing/to_create.csv'
-      #       OUTFILE: 'private_repo/clean_data/women_clothing/skus_to_add.csv'
+      - name: Check existing SKUs
+        run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/check_existing_skus.js
+        env:
+            SHOP: ${{ secrets.SHOP }}
+            SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
+            INFILE: 'private_repo/clean_data/women_clothing/to_create.csv'
+            OUTFILE: 'private_repo/clean_data/women_clothing/skus_to_add.csv'
 
-      # - name: Add new products
-      #   run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/add_products.js
-      #   env:
-      #       SHOP: ${{ secrets.SHOP }}
-      #       SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
-      #       ALL_DATA_FILE: 'private_repo/clean_data/women_clothing/to_create.csv'
-      #       OUTFILE: 'private_repo/clean_data/women_clothing/skus_to_add.csv'
+      - name: Add new products
+        run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/add_products.js
+        env:
+            SHOP: ${{ secrets.SHOP }}
+            SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
+            ALL_DATA_FILE: 'private_repo/clean_data/women_clothing/to_create.csv'
+            OUTFILE: 'private_repo/clean_data/women_clothing/skus_to_add.csv'
 
-      # - name: Update products
-      #   run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/update_products.js
-      #   env:
-      #       SHOP: ${{ secrets.SHOP }}
-      #       SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
-      #       TO_UPDATE: 'private_repo/clean_data/women_clothing/to_update.csv'
+      - name: Update products
+        run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/update_products.js
+        env:
+            SHOP: ${{ secrets.SHOP }}
+            SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
+            TO_UPDATE: 'private_repo/clean_data/women_clothing/to_update.csv'
 
-      # - name: Update products
-      #   run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/set_zero_inventory.js
-      #   env:
-      #       SHOP: ${{ secrets.SHOP }}
-      #       SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
-      #       ZERO_INVENTORY: 'private_repo/clean_data/women_clothing/zero_inventory.csv'
+      - name: Update products
+        run: node /home/runner/work/supplier3_unified_scraper/supplier3_unified_scraper/set_zero_inventory.js
+        env:
+            SHOP: ${{ secrets.SHOP }}
+            SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
+            ZERO_INVENTORY: 'private_repo/clean_data/women_clothing/zero_inventory.csv'
 
       - name: Commit changes from update.py
         run: |
@@ -102,13 +105,6 @@ jobs:
           git config --local user.email "action@github.com"
           git pull origin master --no-edit
           git add clean_data/women_clothing/
-          git commit -m "Commit changes from update.py"
+          git diff --cached --quiet || git commit -m "Commit changes from actions"
           git push
       
-    #   - name: Trigger Public Repo Workflow
-    #     run: |
-    #       curl -X POST \
-    #       -H "Accept: application/vnd.github+json" \
-    #       -H "Authorization: Bearer ${{ secrets.PUBLIC_PAT }}" \
-    #       https://api.github.com/repos/${{ secrets.PUBLIC_REPO_URL }}/dispatches \
-    #       -d '{"event_type": "process_data"}'

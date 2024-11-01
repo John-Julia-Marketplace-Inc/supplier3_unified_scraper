@@ -3,8 +3,8 @@ name: Trigger Women Clothes (Part 2) Pipeline
 on:
   workflow_dispatch:  
 
-#   schedule:
-    # - cron: '0 */3 * * *'  
+  schedule:
+    - cron: '0 */3 * * *'  
 
 jobs:
   trigger-public-workflow:
@@ -58,7 +58,7 @@ jobs:
           git config --local user.email "action@github.com"
           git pull origin master --no-edit
           git add clean_data/women_clothing/
-          git commit -m "Commit changes from update.py"
+          git diff --cached --quiet || git commit -m "Commit changes from actions"
           git push
       
     #   - name: Trigger Public Repo Workflow
